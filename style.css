@@ -1412,7 +1412,7 @@ html, body {
   transition: transform 0.35s ease;
 }
 .letter-polaroid-frame:hover {
-  transform: rotate(-2deg) scale(1.02);
+  transform: rotate(-2deg) scale(1.02) !important;
 }
 
 /* Purple Gingham Checkered Frame Border */
@@ -1422,15 +1422,15 @@ html, body {
     linear-gradient(90deg, rgba(188, 168, 216, 0.72) 50%, transparent 50%),
     linear-gradient(rgba(188, 168, 216, 0.72) 50%, transparent 50%);
   background-size: 18px 18px;
-  padding: clamp(18px, 2.4vw, 28px);
+  padding: clamp(16px, 2vw, 24px);
   border-radius: 14px;
   border: 1.5px solid rgba(160, 135, 195, 0.35);
   display: flex; align-items: center; justify-content: center;
 }
 
 .letter-photo-inner {
-  width: clamp(260px, 28vw, 380px);
-  aspect-ratio: 1 / 1.05;
+  width: clamp(280px, 26vw, 390px);
+  aspect-ratio: 4 / 3;
   border-radius: 8px; overflow: hidden;
   background: #ffffff;
   border: 2px solid rgba(140, 110, 175, 0.25);
@@ -1438,14 +1438,16 @@ html, body {
 }
 .letter-photo-img {
   width: 100%; height: 100%;
-  object-fit: cover; display: block;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 /* Purple Ribbon Bow in Bottom-Left Corner */
 .letter-purple-bow {
   position: absolute;
-  bottom: -44px; left: -44px;
-  width: 142px; height: 142px;
+  bottom: -38px; left: -38px;
+  width: 136px; height: 136px;
   pointer-events: none; z-index: 10;
 }
 .bow-svg {
@@ -1637,28 +1639,96 @@ html, body {
   }
 
   /* Mobile Letter Modal */
+  .letter-screen-overlay {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    align-items: flex-start;
+  }
+  .letter-back-btn {
+    position: fixed;
+    top: clamp(12px, 2.5vh, 20px);
+    right: clamp(14px, 3vw, 24px);
+    z-index: 30;
+  }
   .letter-card-container {
     flex-direction: column;
-    max-height: 92vh;
-    overflow-y: auto;
+    width: 100%;
+    max-width: 520px;
+    max-height: none;
+    min-height: min-content;
+    overflow-y: visible;
     gap: 16px;
-    padding: 56px 16px 24px;
+    padding: clamp(52px, 8vh, 64px) 16px 28px;
+    margin: 0 auto;
+  }
+  .letter-photo-column {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 0 8px;
+  }
+  .letter-polaroid-frame {
+    transform: rotate(-3.5deg);
+  }
+  .letter-gingham-wrap {
+    padding: clamp(12px, 3vw, 16px);
+    background-size: 15px 15px;
   }
   .letter-photo-inner {
-    width: clamp(160px, 50vw, 220px);
+    width: clamp(180px, 52vw, 225px);
+    aspect-ratio: 4 / 3;
   }
   .letter-purple-bow {
-    width: 92px; height: 92px;
-    bottom: -26px; left: -26px;
+    width: 86px; height: 86px;
+    bottom: -22px; left: -22px;
+  }
+  .letter-text-column {
+    width: 100%;
+    max-width: 500px;
+    padding: 4px 6px 12px;
   }
   .letter-headline {
-    font-size: 1.25rem;
+    font-size: clamp(1.2rem, 4.8vw, 1.45rem);
     margin-bottom: 12px;
+    line-height: 1.32;
   }
   .letter-para {
-    font-size: 1rem;
+    font-size: clamp(0.96rem, 3.8vw, 1.08rem);
     line-height: 1.55;
     margin-bottom: 14px;
+  }
+}
+
+/* ─── NARROW PHONES (<= 430px: iPhone 14/15/16 Pro Max, 390px, 375px) ─── */
+@media (max-width: 430px) {
+  .letter-card-container {
+    padding: 48px 12px 24px;
+    gap: 14px;
+  }
+  .letter-polaroid-frame {
+    transform: rotate(-3deg);
+  }
+  .letter-gingham-wrap {
+    padding: 12px;
+    background-size: 14px 14px;
+  }
+  .letter-photo-inner {
+    width: clamp(168px, 49vw, 200px);
+    aspect-ratio: 4 / 3;
+  }
+  .letter-purple-bow {
+    width: 78px; height: 78px;
+    bottom: -18px; left: -18px;
+  }
+  .letter-headline {
+    font-size: clamp(1.15rem, 4.5vw, 1.3rem);
+    margin-bottom: 10px;
+  }
+  .letter-para {
+    font-size: clamp(0.92rem, 3.6vw, 1rem);
+    line-height: 1.5;
+    margin-bottom: 12px;
   }
 }
 
@@ -1705,6 +1775,43 @@ html, body {
   }
   .title-sparkle-star {
     font-size: 1rem;
+  }
+
+  /* Compact Letter Modal for <= 360px (e.g. 320px iPhone SE 1st gen) */
+  .letter-card-container {
+    padding: 44px 8px 18px;
+    gap: 10px;
+  }
+  .letter-polaroid-frame {
+    transform: rotate(-2.5deg);
+  }
+  .letter-gingham-wrap {
+    padding: 9px;
+    background-size: 12px 12px;
+  }
+  .letter-photo-inner {
+    width: clamp(145px, 48vw, 165px);
+    aspect-ratio: 4 / 3;
+  }
+  .letter-purple-bow {
+    width: 66px; height: 66px;
+    bottom: -15px; left: -15px;
+  }
+  .letter-back-btn {
+    top: 10px;
+    right: 10px;
+    padding: 4px 14px 5px;
+    font-size: 0.85rem;
+  }
+  .letter-headline {
+    font-size: 1.08rem;
+    margin-bottom: 8px;
+    line-height: 1.25;
+  }
+  .letter-para {
+    font-size: 0.88rem;
+    line-height: 1.45;
+    margin-bottom: 10px;
   }
 }
 
@@ -1859,7 +1966,19 @@ html, body {
   .letter-card-container {
     max-height: 94vh;
     overflow-y: auto;
-    padding: 38px 20px 16px;
+    padding: 34px 20px 16px;
+    gap: clamp(16px, 3vw, 36px);
+  }
+  .letter-photo-inner {
+    width: clamp(180px, 25vw, 240px);
+    aspect-ratio: 4 / 3;
+  }
+  .letter-gingham-wrap {
+    padding: 10px;
+  }
+  .letter-purple-bow {
+    width: 72px; height: 72px;
+    bottom: -18px; left: -18px;
   }
 }
 
