@@ -90,6 +90,12 @@ Secret-Birthday-Gift/
 │   ├── memory3.jpg               # Polaroid memory photo 3
 │   ├── memory4.jpg               # Polaroid memory photo 4
 │   ├── memory5.jpg               # Polaroid memory photo 5
+│   ├── memory6.jpg               # Polaroid memory photo 6
+│   ├── memory7.jpg               # Polaroid memory photo 7
+│   ├── memory8.jpg               # Polaroid memory photo 8
+│   ├── memory9.jpg               # Polaroid memory photo 9
+│   ├── memory10.jpg              # Polaroid memory photo 10
+│   ├── memory11.jpg              # Polaroid memory photo 11
 │   ├── shinchan-birthday.png     # Cameo lockscreen mascot
 │   ├── shinchan-dance.gif        # Dancing Shinchan celebration
 │   ├── shinchan-excited.gif      # Excited reaction GIF
@@ -179,6 +185,18 @@ const LETTER_SECTIONS = [
   }
 ];
 ```
+
+### 4. Background Music ("Vaaroon")
+The background music starts automatically when the countdown clock strikes midnight and the theatrical stage curtains part.
+
+- **Audio File Location**: Place your authorized audio track at `assets/vaaroon.mp3`.
+- **Optimization Recommendation**: To guarantee rapid loading on mobile networks while maintaining clear audio quality, compress the audio to **MP3 at 96 kbps mono/stereo**:
+  ```bash
+  # Using FFmpeg to compress to 96 kbps MP3:
+  ffmpeg -i your_song.mp3 -b:a 96k assets/vaaroon.mp3
+  ```
+- **Continuous Playback**: Music plays continuously throughout the entire surprise experience (passcode, question, gift boxes, 11 photos gallery, birthday cake, and love letter) without pausing or interruption.
+- **Browser Autoplay Fallback**: In accordance with browser autoplay policies, if unmuted playback is deferred before user interaction, the song automatically starts playing on the user's first interaction (entering the passcode or tapping anywhere) with no buttons or controls required.
 
 ---
 

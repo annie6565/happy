@@ -33,10 +33,115 @@
   });
 })();
 
-/* ─── AUDIO MUTED (PER USER REQUEST) ─── */
+/* ─── AUDIO MUTED SOUND EFFECTS (PER USER REQUEST) ─── */
 function playTick() {}
 function playKeyClick() {}
 function playMidnightChime() {}
+
+/* ─── BACKGROUND MUSIC SYSTEM: "VAAROON" ─── */
+let isMidnightReached = false;
+let isMusicStarted = false;
+let fallbackListenersActive = false;
+
+// Preload and buffer the audio file early so it starts seamlessly at midnight
+function initAudioPreload() {
+  const bgMusic = document.getElementById('bg-music');
+  if (!bgMusic) return;
+  bgMusic.volume = 0.65;
+  bgMusic.loop = true;
+  // Preload audio asset without playing sound before midnight
+  bgMusic.load();
+}
+
+function startBackgroundMusic() {
+  isMidnightReached = true;
+  const bgMusic = document.getElementById('bg-music');
+  if (!bgMusic) return;
+
+  // Prevent restarting or overlapping if already actively playing
+  if (!bgMusic.paused) {
+    isMusicStarted = true;
+    cleanupFallbackListeners();
+    return;
+  }
+
+  bgMusic.volume = 0.65;
+  bgMusic.loop = true;
+
+  const playPromise = bgMusic.play();
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      isMusicStarted = true;
+      cleanupFallbackListeners();
+    }).catch(err => {
+      // Browser autoplay policy prevented unmuted playback without prior user gesture
+      console.info("Autoplay deferred by browser policy. Transparent fallback armed for user interaction.", err);
+      attachFallbackListener();
+    });
+  }
+}
+
+function tryUnlockPlayback() {
+  // Enforce: Never play music before midnight countdown finishes
+  if (!isMidnightReached) return;
+
+  const bgMusic = document.getElementById('bg-music');
+  if (!bgMusic) return;
+
+  if (!bgMusic.paused) {
+    isMusicStarted = true;
+    cleanupFallbackListeners();
+    return;
+  }
+
+  bgMusic.volume = 0.65;
+  bgMusic.loop = true;
+
+  const playPromise = bgMusic.play();
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      isMusicStarted = true;
+      cleanupFallbackListeners();
+    }).catch(() => {
+      // Still awaiting a gesture that satisfies browser policy
+    });
+  }
+}
+
+const FALLBACK_EVENTS = ['pointerdown', 'touchstart', 'click', 'keydown'];
+
+function attachFallbackListener() {
+  if (fallbackListenersActive || isMusicStarted) return;
+  fallbackListenersActive = true;
+
+  FALLBACK_EVENTS.forEach(evt => {
+    window.addEventListener(evt, onUserInteractionFallback, { passive: true });
+  });
+
+  const bgMusic = document.getElementById('bg-music');
+  if (bgMusic) {
+    bgMusic.addEventListener('playing', cleanupFallbackListeners, { once: true });
+  }
+}
+
+function cleanupFallbackListeners() {
+  if (!fallbackListenersActive) return;
+  fallbackListenersActive = false;
+  FALLBACK_EVENTS.forEach(evt => {
+    window.removeEventListener(evt, onUserInteractionFallback);
+  });
+}
+
+function onUserInteractionFallback() {
+  tryUnlockPlayback();
+}
+
+// Early preload initialization
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAudioPreload);
+} else {
+  initAudioPreload();
+}
 
 /* ─── INTIMATE CANDLELIGHT MOTES & ROSE PETALS ─── */
 (function createBackground() {
@@ -443,7 +548,7 @@ function openMysteryBox(boxNum) {
 const LETTER_SECTIONS = [
   {
     id: 'letter-headline-el',
-    text: "Happy birthday to my favourite\nperson! ❤️"
+    text: "Happy Birthday to My\nHusband! ❤️"
   },
   {
     id: 'letter-p1-el',
@@ -695,6 +800,8 @@ function startCountdown() {
 /* ─── MIDNIGHT REVEAL ─── */
 function triggerMidnight() {
   document.getElementById('midnight-burst').classList.add('flash');
+  // Start playing the song when countdown reaches midnight and curtain reveal begins
+  startBackgroundMusic();
   setTimeout(() => {
     document.getElementById('curtain-left').classList.add('open');
     document.getElementById('curtain-right').classList.add('open');
